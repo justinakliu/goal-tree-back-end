@@ -66,9 +66,12 @@ def delete_goal(goal_id):
 #mark goal as complete
 @goals_bp.route("/<goal_id>/complete", methods=["PATCH"])
 def mark_goal_complete(goal_id, status):
-    pass
+    goal = validate_model(Goal, goal_id)
+    goal.complete = True
+
 
 #mark goal as incomplete
 @goals_bp.route("/<goal_id>/incomplete", methods=["PATCH"])
 def mark_goal_incomplete(goal_id, status):
-    pass
+    goal = validate_model(Goal, goal_id)
+    goal.complete = False
