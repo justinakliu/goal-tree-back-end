@@ -42,9 +42,15 @@ def create_goal():
     
     return jsonify({"details":"Successfully created new goal"}), 201
 
+# Returns dictionary representation for <goal_id>, with children as a list of ids
+@goals_bp.route("/<goal_id>/", methods=["GET"])
+def read_one_goal(goal_id):
+    goal = validate_model(Goal, goal_id)
+    return jsonify(goal.to_dict()), 200
+
 # Returns goal tree for <goal_id> in hierarchical data
 @goals_bp.route("/<goal_id>/tree", methods=["GET"])
-def read_one_goal(goal_id):
+def read_one_goal_tree(goal_id):
     goal = validate_model(Goal, goal_id)
     return jsonify(goal.get_tree()), 200
 
