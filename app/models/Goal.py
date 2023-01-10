@@ -25,6 +25,7 @@ class Goal(db.Model):
                 "title": self.title,
                 "description": self.description,
                 "complete": self.complete,
+                "parent_id": self.parent_id,
                 "children": []
                 }
         
