@@ -64,14 +64,22 @@ def delete_goal(goal_id):
     return jsonify({"details": f'Successfully deleted'}), 200
 
 #mark goal as complete
-@goals_bp.route("/<goal_id>/complete", methods=["PATCH"])
-def mark_goal_complete(goal_id, status):
+@goals_bp.route("/<goal_id>/mark_complete", methods=["PATCH"])
+def mark_goal_complete(goal_id):
     goal = validate_model(Goal, goal_id)
     goal.complete = True
 
+    db.session.commit()
+
+    return jsonify(goal.to_dict()), 200
+
 
 #mark goal as incomplete
-@goals_bp.route("/<goal_id>/incomplete", methods=["PATCH"])
-def mark_goal_incomplete(goal_id, status):
+@goals_bp.route("/<goal_id>/mark_incomplete", methods=["PATCH"])
+def mark_goal_incomplete(goal_id):
     goal = validate_model(Goal, goal_id)
     goal.complete = False
+
+    db.session.commit()
+
+    return jsonify(goal.to_dict()), 200
