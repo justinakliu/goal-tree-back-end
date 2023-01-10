@@ -11,11 +11,10 @@ from app.models.goal import Goal
 
 goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
 
-# Should this read all goals, or read all childless goals
+# Returns all goals in database in hierarchical format
 @goals_bp.route("", methods=["GET"])
 def read_all_goals():
     pass
-    # query params
 
 @goals_bp.route("", methods=["POST"])
 def create_goal():
@@ -30,7 +29,7 @@ def read_one_goal(goal_id):
 #returns hierarchical data
 # what should the path be? /<goal_id>/tree or /<goal_id>/goals
 @goals_bp.route("/<goal_id>/goals", methods=["POST"])
-def read_one_goal(goal_id):
+def add_goal(goal_id):
     pass
 
 #mark goal as complete
@@ -40,7 +39,7 @@ def mark_goal_complete(goal_id, status):
 
 #mark goal as incomplete
 @goals_bp.route("/<goal_id>/incomplete", methods=["PATCH"])
-def mark_goal_complete(goal_id, status):
+def mark_goal_incomplete(goal_id, status):
     pass
 
 @goals_bp.route("/<goal_id>", methods=["DELETE"])
