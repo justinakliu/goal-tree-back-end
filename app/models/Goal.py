@@ -11,6 +11,7 @@ class Goal(db.Model):
     children = db.relationship("Goal", cascade="all, delete") # deletes children when parent are deleted
     # The relationship() configuration here works in the same way as a “normal” one-to-many relationship, with the exception that the “direction”, i.e. whether the relationship is one-to-many or many-to-one, is assumed by default to be one-to-many. 
     
+    # TO DO combine to_dict and get_tree methods into one method that takes in another parameter (tree = True/False?, or maybe format = "tree" or ?)
     def to_dict(self):
         return {"id": self.id,
                 "title": self.title,
@@ -33,6 +34,19 @@ class Goal(db.Model):
             tree["children"].append(child.get_tree())
         
         return tree
+    
+    # Maybe should do this with SQLAlchemy recursive query
+    def get_leaves(self):
+        res = []
+        def add_leaves(leaves_arr, root):
+            if not root.children:
+                leaves_arr.append(root.to_dict())
+            else:
+                for child in root.children:
+                    add_leaves(leaves_arr, child) 
+        add_leaves(res, self)
+        print(res)
+        return res
 
     @classmethod
     def from_dict(cls, data):

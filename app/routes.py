@@ -42,6 +42,7 @@ def create_goal():
     
     return jsonify({"details":"Successfully created new goal"}), 201
 
+# To do refactor below two routes into with another parameter <format> -> tree/list?
 # Returns dictionary representation for <goal_id>, with children as a list of ids
 @goals_bp.route("/<goal_id>/", methods=["GET"])
 def read_one_goal(goal_id):
@@ -53,6 +54,14 @@ def read_one_goal(goal_id):
 def read_one_goal_tree(goal_id):
     goal = validate_model(Goal, goal_id)
     return jsonify(goal.get_tree()), 200
+
+# Maybe should do this with SQLAlchemy recursive query
+# Returns an array of childless goals belonging to tree with root <goal_id>
+@goals_bp.route("/<goal_id>/leaves", methods=["GET"])
+def read_one_goal_leaves(goal_id):
+    goal = validate_model(Goal, goal_id)
+    leaves = goal.get_leaves()
+    return jsonify(leaves), 200
 
 @goals_bp.route("/<goal_id>", methods=["DELETE"])
 def delete_goal(goal_id):
