@@ -16,6 +16,28 @@ def validate_model(cls, model_id):
     
     return model
 
+def update_up(goal_id):
+    goal = Goal.query.get(goal_id)
+    previous_complete_value = goal.complete
+    new_complete_value = True
+    for child in goal.children:
+        if not child.complete:
+            new_complete_value = False
+            break
+    # checking for a change prevents unnecessary updating
+    if previous_complete_value != new_complete_value:
+        goal.complete = new_complete_value
+        db.session.commit()
+        if goal.parent_id:
+            update_up(goal.parent_id)
+
+def update_down(goal, new_complete_value):
+    goal.complete = new_complete_value
+    # need to update all, because edge case of a partially complete child
+    db.session.commit() # could i move this to after the for loop
+    for child in goal.children:
+        update_down(goal, new_complete_value)
+
 # TO DO helper method for updating completion status
 
 goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
@@ -31,7 +53,6 @@ def read_all_goals():
 @goals_bp.route("", methods=["POST"])
 def create_goal():
     request_body = request.get_json() 
-
     if "title" not in request_body or "description" not in request_body:
         return jsonify({"details": "Invalid data"}), 400
 
@@ -39,7 +60,10 @@ def create_goal():
 
     db.session.add(new_goal)
     db.session.commit()
-    
+
+    if new_goal.parent_id:
+        update_up(new_goal.parent_id)
+
     return jsonify({"details":"Successfully created new goal"}), 201
 
 # To do refactor below two routes into with another parameter <format> -> tree/list?
@@ -67,6 +91,8 @@ def read_one_goal_leaves(goal_id):
 def delete_goal(goal_id):
     goal = validate_model(Goal, goal_id)
 
+    #if goal has parent, need to update up ?
+
     db.session.delete(goal)
     db.session.commit()
 
@@ -76,10 +102,18 @@ def delete_goal(goal_id):
 @goals_bp.route("/<goal_id>/mark_complete", methods=["PATCH"])
 def mark_goal_complete(goal_id):
     goal = validate_model(Goal, goal_id)
-    goal.complete = True
+    if not goal.complete:
+        goal.complete = True
+        db.session.commit()
+        for child in goal.children:
+            update_down(child, True)
+        if goal.parent_id:
+            update_up(goal.parent_id)
+    # if change in state
+    #   if has children: update down
+    #   if has parent: update up 
 
     db.session.commit()
-
     return jsonify(goal.to_dict()), 200
 
 

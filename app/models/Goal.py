@@ -14,7 +14,7 @@ class Goal(db.Model):
     # TO DO combine to_dict and get_tree methods into one method that takes in another parameter (tree = True/False?, or maybe format = "tree" or ?)
     def to_dict(self):
         return {"id": self.id,
-                "title": self.title,
+                "name": self.title, # temporary change to name 
                 "description": self.description,
                 "complete": self.complete,
                 "parent_id": self.parent_id,
@@ -23,7 +23,7 @@ class Goal(db.Model):
 
     def get_tree(self):
         tree = {"id": self.id,
-                "title": self.title,
+                "name": self.title, # temporary change to name name
                 "description": self.description,
                 "complete": self.complete,
                 "parent_id": self.parent_id,
