@@ -109,9 +109,6 @@ def mark_goal_complete(goal_id):
             update_down(child, True)
         if goal.parent_id:
             update_up(goal.parent_id)
-    # if change in state
-    #   if has children: update down
-    #   if has parent: update up 
 
     db.session.commit()
     return jsonify(goal.to_dict()), 200
@@ -121,7 +118,14 @@ def mark_goal_complete(goal_id):
 @goals_bp.route("/<goal_id>/mark_incomplete", methods=["PATCH"])
 def mark_goal_incomplete(goal_id):
     goal = validate_model(Goal, goal_id)
-    goal.complete = False
+    
+    if goal.complete:
+        goal.complete = False
+        db.session.commit()
+        for child in goal.children:
+            update_down(child, False)
+        if goal.parent_id:
+            update_up(goal.parent_id)
 
     db.session.commit()
 
