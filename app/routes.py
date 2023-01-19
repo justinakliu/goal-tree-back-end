@@ -50,6 +50,13 @@ def read_all_goals():
     goals_response = [goal.to_dict() for goal in goals]
     return jsonify(goals_response), 200
 
+@goals_bp.route("/roots", methods=["GET"])
+def read_all_root_goals():
+    goals = Goal.query.filter(Goal.parent_id == None)
+
+    goals_response = [goal.to_dict() for goal in goals]
+    return jsonify(goals_response), 200
+
 @goals_bp.route("", methods=["POST"])
 def create_goal():
     request_body = request.get_json() 
