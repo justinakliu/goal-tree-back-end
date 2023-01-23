@@ -36,7 +36,7 @@ def update_down(goal, new_complete_value):
     # need to update all, because edge case of a partially complete child
     db.session.commit() # could i move this to after the for loop
     for child in goal.children:
-        update_down(goal, new_complete_value)
+        update_down(child, new_complete_value)
 
 # TO DO helper method for updating completion status
 
@@ -45,14 +45,14 @@ goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
 # Returns all goals in database in array format
 @goals_bp.route("", methods=["GET"])
 def read_all_goals():
-    goals = Goal.query.all()
+    goals = Goal.query.order_by(Goal.title.asc())
 
     goals_response = [goal.to_dict() for goal in goals]
     return jsonify(goals_response), 200
 
 @goals_bp.route("/roots", methods=["GET"])
 def read_all_root_goals():
-    goals = Goal.query.filter(Goal.parent_id == None)
+    goals = Goal.query.filter(Goal.parent_id == None).order_by(Goal.title.asc())
 
     goals_response = [goal.to_dict() for goal in goals]
     return jsonify(goals_response), 200

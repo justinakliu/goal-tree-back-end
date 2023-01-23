@@ -30,8 +30,11 @@ class Goal(db.Model):
                 "children": []
                 }
         
+        # sorting - is there a better way to do it in sqlalchemy? sort
         for child in self.children:
             tree["children"].append(child.get_tree())
+        
+        tree["children"].sort(key = lambda x:x["id"])
         
         return tree
     
