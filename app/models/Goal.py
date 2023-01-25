@@ -4,7 +4,7 @@ from app import db
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=True)
-    description = db.Column(db.String)
+    description = db.Column(db.String, nullable=True)
     complete = db.Column(db.Boolean, nullable=True)
 
     parent_id = db.Column(db.Integer, db.ForeignKey("goal.id"), nullable=True)
