@@ -60,7 +60,7 @@ def read_all_root_goals():
 @goals_bp.route("", methods=["POST"])
 def create_goal():
     request_body = request.get_json() 
-    if "title" not in request_body or "description" not in request_body:
+    if "title" not in request_body:
         return jsonify({"details": "Invalid data"}), 400
 
     new_goal = Goal.from_dict(request_body)
