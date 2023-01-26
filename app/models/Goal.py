@@ -54,7 +54,6 @@ class Goal(db.Model):
     @classmethod
     def from_dict(cls, data):
         new_goal = Goal(title=data["title"],
-                    description=data["description"],
                     parent_id = data.get("parent_id"),
                     )
 

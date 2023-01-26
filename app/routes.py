@@ -71,7 +71,7 @@ def create_goal():
     if new_goal.parent_id:
         update_up(new_goal.parent_id)
 
-    return jsonify({"details":"Successfully created new goal"}), 201
+    return jsonify(new_goal.to_dict()), 201
 
 # To do refactor below two routes into with another parameter <format> -> tree/list?
 # Returns dictionary representation for <goal_id>, with children as a list of ids
