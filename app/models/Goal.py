@@ -48,7 +48,7 @@ class Goal(db.Model):
                 for child in root.children:
                     add_leaves(leaves_arr, child) 
         add_leaves(res, self)
-        print(res)
+        res.sort(key = lambda x: (x.get("parent_id", 0), x["id"]))
         return res
 
     @classmethod
