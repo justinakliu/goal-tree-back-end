@@ -98,10 +98,13 @@ def read_one_goal_leaves(goal_id):
 def delete_goal(goal_id):
     goal = validate_model(Goal, goal_id)
 
-    #if goal has parent, need to update up ?
+    parent_id = goal.parent_id
 
     db.session.delete(goal)
     db.session.commit()
+    
+    if parent_id:
+        update_up(parent_id)
 
     return jsonify({"details": f'Successfully deleted'}), 200
 
