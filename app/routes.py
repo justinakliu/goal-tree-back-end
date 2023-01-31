@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, make_response, abort, request
 from app import db
-from app.models.goal import Goal
+from app.models.goal2 import Goal
 
     
 def validate_model(cls, model_id):
