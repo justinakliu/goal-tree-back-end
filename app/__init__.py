@@ -24,7 +24,7 @@ def create_app(test_config=None):
             "SQLALCHEMY_TEST_DATABASE_URI")
 
     # Models
-    from app.models.goal import Goal
+    from .models.goal import Goal
 
     db.init_app(app)
     migrate.init_app(app, db)
