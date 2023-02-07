@@ -75,7 +75,7 @@ def create_goal():
 
 # To do refactor below two routes into with another parameter <format> -> tree/list?
 # Returns dictionary representation for <goal_id>, with children as a list of ids
-@goals_bp.route("/<goal_id>/", methods=["GET"])
+@goals_bp.route("/<goal_id>", methods=["GET"])
 def read_one_goal(goal_id):
     goal = validate_model(Goal, goal_id)
     return jsonify(goal.to_dict()), 200
