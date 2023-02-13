@@ -34,11 +34,9 @@ def update_up(goal_id):
 def update_down(goal, new_complete_value):
     goal.complete = new_complete_value
     # need to update all, because edge case of a partially complete child
-    db.session.commit() # could i move this to after the for loop
+    db.session.commit() 
     for child in goal.children:
         update_down(child, new_complete_value)
-
-# TO DO helper method for updating completion status
 
 goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
 
@@ -73,7 +71,6 @@ def create_goal():
 
     return jsonify(new_goal.to_dict()), 201
 
-# To do refactor below two routes into with another parameter <format> -> tree/list?
 # Returns dictionary representation for <goal_id>, with children as a list of ids
 @goals_bp.route("/<goal_id>", methods=["GET"])
 def read_one_goal(goal_id):
@@ -86,7 +83,6 @@ def read_one_goal_tree(goal_id):
     goal = validate_model(Goal, goal_id)
     return jsonify(goal.get_tree()), 200
 
-# Maybe should do this with SQLAlchemy recursive query
 # Returns an array of childless goals belonging to tree with root <goal_id>
 @goals_bp.route("/<goal_id>/leaves", methods=["GET"])
 def read_one_goal_leaves(goal_id):

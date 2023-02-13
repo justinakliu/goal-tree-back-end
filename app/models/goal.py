@@ -30,7 +30,6 @@ class Goal(db.Model):
                 "children": []
                 }
         
-        # sorting - is there a better way to do it in sqlalchemy? sort
         for child in self.children:
             tree["children"].append(child.get_tree())
         
@@ -38,7 +37,6 @@ class Goal(db.Model):
         
         return tree
     
-    # Maybe should do this with SQLAlchemy recursive query
     def get_leaves(self):
         res = []
         def add_leaves(leaves_arr, root):
