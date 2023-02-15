@@ -3,9 +3,10 @@ from app import db
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=True)
+    title = db.Column(db.String)
     description = db.Column(db.String, nullable=True)
     complete = db.Column(db.Boolean, nullable=True)
+    priority = db.Column(db.Boolean, nullable=True)
 
     parent_id = db.Column(db.Integer, db.ForeignKey("goal.id"), nullable=True)
     children = db.relationship("Goal", cascade="all, delete") # deletes children when parent are deleted
@@ -14,7 +15,7 @@ class Goal(db.Model):
     # TO DO combine to_dict and get_tree methods into one method that takes in another parameter (tree = True/False?, or maybe format = "tree" or ?)
     def to_dict(self):
         return {"id": self.id,
-                "name": self.title, # temporary change to name 
+                "name": self.title,  
                 "description": self.description,
                 "complete": self.complete,
                 "parent_id": self.parent_id,
@@ -23,7 +24,7 @@ class Goal(db.Model):
 
     def get_tree(self):
         tree = {"id": self.id,
-                "name": self.title, # temporary change to name name
+                "name": self.title,
                 "description": self.description,
                 "complete": self.complete,
                 "parent_id": self.parent_id,
