@@ -50,7 +50,7 @@ def read_all_goals():
 
 @goals_bp.route("/roots", methods=["GET"])
 def read_all_root_goals():
-    goals = Goal.query.filter(Goal.parent_id == None).order_by(Goal.title.asc())
+    goals = Goal.query.filter(Goal.parent_id == None).order_by(Goal.id.desc())
 
     goals_response = [goal.to_dict() for goal in goals]
     return jsonify(goals_response), 200
@@ -104,35 +104,19 @@ def delete_goal(goal_id):
 
     return jsonify({"details": f'Successfully deleted'}), 200
 
-#mark goal as complete
-@goals_bp.route("/<goal_id>/mark_complete", methods=["PATCH"])
-def mark_goal_complete(goal_id):
+
+@goals_bp.route("/<goal_id>/<update_action>", methods=["PATCH"])
+def mark_goal_complete(goal_id, update_action):
     goal = validate_model(Goal, goal_id)
-    if not goal.complete:
-        goal.complete = True
+    new_status = True if update_action == "mark_complete" else False
+
+    if goal.complete != new_status:
+        goal.complete = new_status
         db.session.commit()
         for child in goal.children:
-            update_down(child, True)
+            update_down(child, new_status)
         if goal.parent_id:
             update_up(goal.parent_id)
 
     db.session.commit()
-    return jsonify(goal.to_dict()), 200
-
-
-#mark goal as incomplete
-@goals_bp.route("/<goal_id>/mark_incomplete", methods=["PATCH"])
-def mark_goal_incomplete(goal_id):
-    goal = validate_model(Goal, goal_id)
-    
-    if goal.complete:
-        goal.complete = False
-        db.session.commit()
-        for child in goal.children:
-            update_down(child, False)
-        if goal.parent_id:
-            update_up(goal.parent_id)
-
-    db.session.commit()
-
     return jsonify(goal.to_dict()), 200
