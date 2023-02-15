@@ -130,7 +130,7 @@ def mark_goal_priority(goal_id):
     return jsonify(goal.to_dict()), 200
 
 @goals_bp.route("/<goal_id>/unmark_priority", methods=["PATCH"])
-def mark_goal_priority(goal_id):
+def unmark_goal_priority(goal_id):
     goal = validate_model(Goal, goal_id)
     goal.priority = False
 
