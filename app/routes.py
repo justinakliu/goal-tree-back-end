@@ -43,7 +43,7 @@ goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
 # Returns all goals in database in array format
 @goals_bp.route("", methods=["GET"])
 def read_all_goals():
-    goals = Goal.query.order_by(Goal.title.asc())
+    goals = Goal.query.order_by(Goal.id.desc())
 
     goals_response = [goal.to_dict() for goal in goals]
     return jsonify(goals_response), 200
