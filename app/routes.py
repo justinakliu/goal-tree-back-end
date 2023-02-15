@@ -120,3 +120,19 @@ def mark_goal_complete(goal_id, update_action):
 
     db.session.commit()
     return jsonify(goal.to_dict()), 200
+
+@goals_bp.route("/<goal_id>/mark_priority", methods=["PATCH"])
+def mark_goal_priority(goal_id):
+    goal = validate_model(Goal, goal_id)
+    goal.priority = True
+
+    db.session.commit()
+    return jsonify(goal.to_dict()), 200
+
+@goals_bp.route("/<goal_id>/unmark_priority", methods=["PATCH"])
+def mark_goal_priority(goal_id):
+    goal = validate_model(Goal, goal_id)
+    goal.priority = False
+
+    db.session.commit()
+    return jsonify(goal.to_dict()), 200

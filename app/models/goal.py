@@ -18,6 +18,7 @@ class Goal(db.Model):
                 "name": self.title,  
                 "description": self.description,
                 "complete": self.complete,
+                "priority": self.priority,
                 "parent_id": self.parent_id,
                 "children": [child.id for child in self.children]
                 }
@@ -27,6 +28,7 @@ class Goal(db.Model):
                 "name": self.title,
                 "description": self.description,
                 "complete": self.complete,
+                "priority": self.priority,
                 "parent_id": self.parent_id,
                 "children": []
                 }
